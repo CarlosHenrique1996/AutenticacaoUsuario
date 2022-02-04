@@ -10,7 +10,18 @@ const UserSchema = new Schema({
     created: { type: Date, default: Date.now }
 });
 
-//Serve para criptografar as senhas
+/* 
+//Serve para criptografar as senhas de forma async
+UserSchema.pre('save', async (next)=>{
+    let user = this;
+    if (!user.isModified('password')) return next();
+    
+    user.password = await bcrypt.hash(user.password, 10);
+    return next();  
+});
+*/
+
+//Serve para criptografar as senhas de forma callback
 UserSchema.pre('save', function (next){
     let user = this;
     if (!user.isModified('password')) return next();
@@ -20,5 +31,6 @@ UserSchema.pre('save', function (next){
         return next();
     })
 })
+
 
 module.exports = mongoose.model('User', UserSchema)

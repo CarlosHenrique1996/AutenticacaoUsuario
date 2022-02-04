@@ -2,14 +2,34 @@ const express = require('express');
 const router = express.Router();
 const Users = require('../model/user'); //conexão entre esse arquivo com o arquivo model user.js (Neste arq é aonde tem as colunas do bd declaradas.
 const bcrypt = require('bcrypt');
+const { findOne } = require('../model/user');
 
-//consulta de usuários 
-router.get('/', (req,res) =>{  
-    Users.find({}, (err, data) =>{
-        if (err) return res.status(400).send({ error: 'Erro na consulta de usuários!'});
-        return res.send(data); //Retorna todos os usuarios.
-    });
+//consulta de usuários com async e try catch
+router.get('/', async(req,res) =>{
+    try{
+        const users = await Users.find({});
+        return res.send(users);
+    }
+    catch (err) {
+        return res.status(400).send({ error: 'Erro na consulta de usuários!'});
+    }
 });
+
+/*
+//consulta de usuários por nome forma async NÃO DEU BOM
+router.get('/consulta', async(req,res) =>{
+    const {name} = req.body;
+    try{
+        if (await !Users.findOne({name})) return res.status(400).send ({ error: 'Preciso que insira algum dado!'});  //Verifica se o obj esta vindo vazio
+        if (await !Users.findOne({data})) return res.status(208).send({error: 'Não existe este usuario ' + name});  //Verifica se o usuario consulta consta no bd, se ñ tiver retorna mensagem
+        return res.send(data);
+    }
+    catch{
+        return res.status(400).send({ error: 'Erro ao buscar usuário!'});  //Caso aconteceça algum erro na busca
+
+    }
+});
+*/
 
 //consulta de usuários por nome
 router.get('/consulta', (req,res) =>{  
@@ -22,6 +42,7 @@ router.get('/consulta', (req,res) =>{
         return res.send(data); //Retorna o usuario desejado
     });
 });
+
 
 //Criar usuario
 router.post('/create', (req,res) =>{  
@@ -49,13 +70,13 @@ router.post('/auth', (req, res) =>{
     if (!email || !password) return res.status(400).send({error: 'E-mail ou senha não preenchido'});  //Se algum dado estiver faltando, irá retornar erro
 
     Users.findOne({email}, (err, data) =>{  //Consultando email
-        if (err) return res.send({error: ' Erro ao buscar usuário!'});
-        if (!data) return res.send({error: 'Usuário não registrado'});  //Verificando se usuario/email existe
+        if (err) return res.status(400).send({error: ' Erro ao buscar usuário!'});
+        if (!data) return res.status(400).send({error: 'Usuário não registrado'});  //Verificando se usuario/email existe
 
         bcrypt.compare(password, data.password, (err, same) =>{  //caso exista, aqui irá veirficar se a senha esta correta.
-            if(!same) return res.send({error: 'Senha incorreta!'});
+            if(!same) return res.status(400).send({error: 'Senha incorreta!'});
 
-            return res.send(data);
+            return res.send({message: 'Seja bem vindo, ' + data.name + '. Você esta autenticado.'});
         })
     }).select('+password');
 });
@@ -77,4 +98,5 @@ router.delete('/delete', (req,res) =>{
 
 });
 */
+
 module.exports = router;
