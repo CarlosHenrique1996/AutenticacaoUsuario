@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Users = require('../model/user'); //conexão entre esse arquivo com o arquivo model user.js (Neste arq é aonde tem as colunas do bd declaradas.
+const bcrypt = require('bcrypt');
 
 //consulta de usuários 
 router.get('/', (req,res) =>{  
@@ -39,6 +40,24 @@ router.post('/create', (req,res) =>{
             return res.send({message: 'Seu usuario foi criado. Muito obrigado ' + data.name});  
         });
     });
+});
+
+//Autenticação de usuário
+router.post('/auth', (req, res) =>{
+    const {email, password} = req.body;  //Pegando obj do body
+
+    if (!email || !password) return res.status(400).send({error: 'E-mail ou senha não preenchido'});  //Se algum dado estiver faltando, irá retornar erro
+
+    Users.findOne({email}, (err, data) =>{  //Consultando email
+        if (err) return res.send({error: ' Erro ao buscar usuário!'});
+        if (!data) return res.send({error: 'Usuário não registrado'});  //Verificando se usuario/email existe
+
+        bcrypt.compare(password, data.password, (err, same) =>{  //caso exista, aqui irá veirficar se a senha esta correta.
+            if(!same) return res.send({error: 'Senha incorreta!'});
+
+            return res.send(data);
+        })
+    }).select('+password');
 });
 
 /*
