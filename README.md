@@ -1,5 +1,5 @@
 # API de cadastro de dados de usuários.
-Nessa API é possível cadastrar e consultar usurio atraves de endepoints. 
+Nessa API é possível cadastrar e consultar usuário através de endepoints. 
 
 ## Sobre projeto
 
@@ -14,16 +14,15 @@ Projeto criado com o intuito de praticar o desenvolvimento de APIs Rest utilizan
 GET  users/
 
 ```
-* Consulta usuario por nome.
+* Consulta usuário por nome.
 ```
-GET  users/consulta
-```
+GET  users/consulta```
 
-* Cria usuario.
+* Cria usuário.
 ```
 POST  users/create
 ```
-Observação: Ao criar um usuario novo, automaticamente é gerado um Token. Esse Token deve ser utilizado para autetincar o serviço de API ao efetuar o login com o usurio novo. Esse Token deve ser informado no headers.
+Observação: Ao criar um usuário novo, automaticamente é gerado um Token. Esse Token deve ser utilizado para autenticar o serviço de API ao efetuar o login com o usuário novo. Esse Token deve ser informado no headers.
 
 * Login de usuario cadastrado.
 ```
