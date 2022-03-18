@@ -22,21 +22,6 @@ router.get('/', async(req,res) =>{
     }
 });
 
-/*
-//consulta de usuários por nome forma async NÃO DEU BOM
-router.get('/consulta', async(req,res) =>{
-    const {name} = req.body;
-    try{
-        if (await !Users.findOne({name})) return res.status(400).send ({ error: 'Preciso que insira algum dado!'});  //Verifica se o obj esta vindo vazio
-        if (await !Users.findOne({data})) return res.status(208).send({error: 'Não existe este usuario ' + name});  //Verifica se o usuario consulta consta no bd, se ñ tiver retorna mensagem
-        return res.send(data);
-    }
-    catch{
-        return res.status(400).send({ error: 'Erro ao buscar usuário!'});  //Caso aconteceça algum erro na busca
-
-    }
-});
-*/
 
 //consulta de usuários por nome
 router.get('/consulta', (req,res) =>{  
