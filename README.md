@@ -16,7 +16,8 @@ GET  users/
 ```
 * Consulta usuário por nome.
 ```
-GET  users/consulta```
+GET  users/consulta
+```
 
 * Cria usuário.
 ```
